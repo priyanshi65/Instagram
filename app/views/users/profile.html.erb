@@ -1,0 +1,226 @@
+<style>
+  .profile{
+      width:  191px;
+      height: 183px;
+      border-radius: 50%;
+      box-shadow: 2px 2px 2px black;
+      margin-bottom: 22px;
+      border: 2px solid black;
+  }
+  .container{
+      text-align:center;
+  }
+  table{
+      border:1px solid black;
+      text-align: center;
+      width:40px;
+      height:145px;
+      margin-left:8px;
+  }
+  th{
+      border:1px solid black;
+      box-shadow: 1px 1px 1px black;
+  }
+  td{
+      border: 1px solid black;
+      box-shadow: 1px 1px 1px black;
+  }
+  .col-8{
+      margin-left:454px;
+      padding-right: 99px;
+  }
+  .photo{
+      margin-top:60px;
+      height: 367px;
+      width: 347px;
+      padding-bottom: 32px;
+      border:1px solid black;
+      border:10px solid transparent;
+      box-shadow:2px 2px 5px black;
+      margin-left:100px;
+  }
+  P{
+      position:relative;
+      bottom:26px;
+      left:10px;
+      margin-left:100px;
+      font-family: 'Dancing Script', cursive;
+  }
+  .col-4{
+      border-right: 1px solid black;
+      position:fixed;
+      font-family: 'Dancing Script', cursive;
+  }
+  .like-section{
+      position: absolute;
+      bottom: 33px;
+      padding-bottom:10px;
+      right: 105px;
+  }
+  .like-button{
+      background-color: #3897f0;
+      height:32px;
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      cursor: pointer;
+      margin-left:30px;
+  }
+  .like-button:hover{
+      background-color: #3173c0;
+  }
+  .unlike-button{
+      background-color: #ed4956;
+      height:32px;
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      cursor: pointer;
+      margin-left:30px;
+  }
+  .unlike-button:hover{
+      background-color: #c81826;
+  }
+  .like-count{
+      font-weight: bold;
+      padding-left:10px;
+  }
+  .dropdown{
+      position: absolute;
+      bottom: 10px;
+      left: 59px;
+  }
+  .row{
+      width:100%;
+  }
+  .close{
+      margin:0px!important;
+      cursor: auto!important;
+  }
+  .column{
+      margin-left:129px!important;
+  }
+  .modal-header{
+      justify-content:center!important;
+  }
+  .modal-content{
+      width:77%!important;
+  }
+  .coment{
+      margin-left:89px!important;
+  }
+  .sub{
+      justify-content:center!important;
+  }
+  .size{
+      font-size:17px!important;
+  }
+  .border{
+      border-right:1px solid black;
+      height:100px;
+  }
+</style>
+
+<div class="row">
+  <div class="col-4">
+    <div class="container">
+      <% if @user.image.attached?%>
+        <%= image_tag(@user.image, class: "profile")%>
+      <%else%>
+        <%= image_tag("/assets/blank.png",class:"profile")%>
+      <%end%>
+      <h4>User Name: <%=@user.username%></h4>
+
+      <% if current_user.is_following?(@user) %>
+        <h6><%= button_to user_unfollow_path(@user), method: :delete,remote: true do%>Unfollow</h6>
+        <% end %>
+      <% else %>
+        <h6><%= button_to user_follow_path(@user), method: :post do%>Follow</h6>
+        <% end %>
+      <% end %>
+      <h5> <%= link_to "", root_path, class: "btn btn-danger fa fa-angle-double-left",style:"background-color:#ff617d" %></h5>
+    </div>
+    <table class="col">
+      <thead>
+        <tr>
+          <th scope="col">Posts </th>
+          <th scope="col">Followers (<%= @followers.count %>)</th>
+          <th scope="col">Followings (<%= @followings.count %>)</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td>
+            <%= @user.posts.count %></span> 
+          </td>
+          <td>
+            <% @followers.each do |follower| %>
+              <%= link_to follower.username,"/users/profile/#{follower.id}" %><br>
+            <% end %>
+          </td>
+          <td>
+            <% @followings.each do |following| %>
+              <%= link_to following.username, "/users/profile/#{following.id}" %><br>
+            <% end %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-8">
+    <div class="row">
+      <% @user.posts.each do |post|%>
+        <div class="col-6">
+          <%=image_tag(url_for( post.image),class:"photo") %>
+          <p><%= post.bio%></p>
+            <div class="like-section">
+              <% pre_like = post.likes.find { |like| like.user_id == current_user.id} %>
+              <% if pre_like %>
+                <%= button_to '', post_like_path(post.id, pre_like), method: :delete, class: "unlike-button fa fa-thumbs-down" %>
+                <%# DESTROY METHOD--LIKES CONTROLLER %>
+              <% else %>
+                <%= button_to '', post_likes_path(post.id), class: "like-button fa fa-thumbs-up" %>
+                <%# CREATE METHOD--LIKES CONTROLLER %>
+              <% end %>
+              <button type="button" class="btn btn-info btn-sm dropdown" data-toggle="modal" data-target="#<%=post.id %>">
+                <%= post.likes.count %> Like | <%= post.comments.count %> comments
+              </button>
+
+              <div class="modal fade" id="<%=post.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <div class="close">
+                        <h5 class="modal-title size" id="exampleModalLabel">Likes<br>
+                        <% post.likes.each do |like| %><a class="size"><%= like.user.username %></a><br><%end%></h5>
+                      </div>
+                      <div class="border"></div>
+                      <div class="close" style="padding-left:20px">
+                        <h5 class="modal-title size" id="exampleModalLabel">Comments<br>
+                        <% post.comments.each do |comment| %><a class="size"><%= comment.user.username %> --> <%= comment.body %></a><br><%end%></h5>
+                      </div>
+                    </div>
+                    <%= form_with model: [post, post.comments.build], remote: true do |form| %>
+                      <div class="modal-body">
+                        <div class="form-group">
+                          <label for="message-text" class="col-form-label column">Add Comment:</label><br>
+                          <%= form.text_area :body ,class:"coment"%>
+                        </div>
+                      </div>
+                      <div class="modal-footer sub">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <%= form.submit%>                
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

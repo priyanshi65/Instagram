@@ -1,0 +1,72 @@
+<style>
+  table{
+      border:1px solid black;
+      text-align: center;
+      width:69% !important;
+  }
+  th{
+      border:1px solid black;
+  }
+  td{
+      border: 1px solid black;
+  }
+  .center {
+      margin-left: auto;
+      margin-right: auto;
+  }
+  .unfollow-button{
+      background-color:#f55242;
+      border-radius:14px;
+  }
+  .follow-button{
+      background-color:#73ec73;
+      border-radius:14px;
+  }
+  .unfollow-button:hover,.follow-button:hover{
+      box-shadow:1px 1px 1px 1px black;
+      border-radius:18px;
+  }
+  #example_wrapper .row{
+      width: 100%;
+  }
+  #example_filter{
+      text-align:end;
+  }
+  .dataTables_length{
+      margin-left:10px;
+  }
+</style>
+
+<table class="table table-striped center" id="example">
+  <thead >
+    <tr>
+      <th><h4>User</h4> </th>
+      <th><h4>Action</h4> </th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @users.each do |f| %>
+      <tr>
+        <td><h5><%= link_to f.username, user_profile_path(f.id) %></h5></td>
+        <td>
+          <% if current_user.is_following?(f) %>
+            <%= button_to user_unfollow_path(f), class: "unfollow-button", method: :delete do %>
+              Unfollow
+            <% end %>
+          <% else %>
+            <%= button_to user_follow_path(f), class: "follow-button", method: :post do %>
+              Follow
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <%end%>
+  </tbody>
+</table>
+
+<script>
+$(document).ready( function () {
+new DataTable('#example');
+});
+</script>

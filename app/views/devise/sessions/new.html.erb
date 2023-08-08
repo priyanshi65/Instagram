@@ -1,0 +1,47 @@
+<style>
+.d-flex{
+  margin-top:80px;
+}
+</style>
+<%# <div class="vh-100"> %>
+<div class="d-flex justify-content-center align-items-center">   <%# flex %>
+    <div class="card" style="width: 29rem; height: 27rem;">                      <%#  card  %>
+        <div class="card-body text-center">                                     <%#  card body %>
+            <div class="instagram-logo-link">
+              <%=image_tag("/assets/instagram-new-.jpg" ,style: "width: 200px")  %>
+
+            </div> 
+            <p class="notice"><%= notice %></p>
+
+            <p class="text-center text-secondary">Login to connect with your friend</p>
+            <hr>
+          <%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+            <div class="field">
+              <%= f.email_field :email,placeholder:"           ----email----      ", autofocus: true, autocomplete: "email" %>
+            </div><br>
+
+            <div class="field">
+              <%= f.password_field :password,placeholder:"         ----password----", autocomplete: "current-password" %>
+            </div>
+
+            <% if devise_mapping.rememberable? %>
+              <div class="field">
+                <%= f.check_box :remember_me %>
+                <%= f.label :remember_me %>
+              </div>
+            <% end %>
+
+            <div class="actions">
+              <%= f.submit "Log in",class:"btn btn-primary insta-primary" %>
+            </div>
+            <% end %>
+            <hr>
+                 <%= render "devise/shared/links"   %> 
+                <%#= render "devise/posts/index"   %> 
+          <%# <hr> %>
+      </div>
+    </div>
+    </div>
+   
+  <%# </div> %>
+<%# </div> %>

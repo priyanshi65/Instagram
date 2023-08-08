@@ -1,0 +1,49 @@
+<% 
+if
+ already_liked? %>
+  
+alert
+(
+"You can't like more than once"
+);
+<% 
+else
+ %>
+  
+// Update the like button and count
+
+  $(
+'#like-button'
+).
+removeClass
+(
+'like-button'
+).
+addClass
+(
+'unlike-button'
+);
+  $(
+'#like-button'
+).
+text
+(
+'Unlike'
+);
+  
+var
+ likeCount = 
+parseInt
+($(
+'#like-count'
+).
+text
+());
+  $(
+'#like-count'
+).
+text
+(likeCount + 
+1
+);
+<% end %>

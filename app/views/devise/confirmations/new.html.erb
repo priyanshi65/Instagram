@@ -1,0 +1,33 @@
+<style>
+.d-flex{
+  margin-top:80px;
+}
+</style>
+<%# <div class="vh-100"> %>
+<div class="d-flex justify-content-center align-items-center">   <%# flex %>
+    <div class="card" style="width: 29rem; height: 25rem;">                      <%#  card  %>
+        <div class="card-body text-center">                                     <%#  card body %>
+            <div class="instagram-logo-link">
+              <%=image_tag("/assets/instagram-new-.jpg" ,style: "width: 200px")  %>
+            </div> 
+            <p class="text-center text-secondary">SignUp to connect with your friend</p>
+            <hr>
+<h2>Resend confirmation instructions</h2>
+
+<%= form_for(resource, as: resource_name, url: confirmation_path(resource_name), html: { method: :post }) do |f| %>
+  <%= render "devise/shared/error_messages", resource: resource %>
+
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.email_field :email, autofocus: true, autocomplete: "email", value: (resource.pending_reconfirmation? ? resource.unconfirmed_email : resource.email) %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit "Resend confirmation instructions" %>
+  </div>
+<% end %>
+
+<%= render "devise/shared/links" %>
+</div>
+</div>
+</div>

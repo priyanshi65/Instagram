@@ -1,0 +1,24 @@
+<style>
+  .container{
+      border:2px solid black;
+      height:380px;
+      width:600px;
+      border-radius:50px;
+      padding-top:20px;
+      text-align:center;
+  }
+  h5{
+      padding-top:50px;
+      padding-bottom:30px;
+  }
+</style>
+ 
+<div class="container">
+  <%= form_for current_user, url: user_path(current_user), method: :put do |f| %>
+      <h6> <%= f.label :Image %><br>
+      <%= f.file_field :image, class: "form-control" %></h6>
+      <h5> <%= f.label :UserName %><br>
+      <%= f.text_field :username,placeholder:"          ----username----", autofocus: true %></h5>
+      <h5><%= f.submit "Submit", class: "btn btn-primary" %>        <%= link_to "Back", root_path,class: "btn btn-primary" %></h5>
+  <% end %>
+</div>

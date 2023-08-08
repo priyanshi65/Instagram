@@ -1,0 +1,97 @@
+
+<style>
+.close{
+  margin:0px!important;
+  cursor: auto!important;
+}
+.column{
+  margin-left:129px!important;
+}
+.modal-header{
+  justify-content:center!important;
+}
+.modal-content{
+  width:77%!important;
+}
+.coment{
+  margin-left:89px!important;
+}
+.sub{
+  justify-content:center!important;
+}
+</style>
+
+<%#debugger%>
+<div class="like-section">
+  <% pre_like = post.likes.find { |like| like.user_id == current_user.id} %>
+    <% if pre_like %>
+      <%= button_to '', post_like_path(post.id, pre_like,format: :json), method: :delete, class: "unlike-button fa fa-thumbs-down", remote: true, onclick: "reloadLikeCount()", form: { 'id' => "post_"+ post.id.to_s , 'class' => "post_class" }%>
+    <% else %>
+      <%= button_to '', post_likes_path(post.id,format: :json), class: "like-button fa fa-thumbs-up", remote: true,onclick: "reloadLikeCount()", form: { 'id' => "post_"+ post.id.to_s , 'class' => "post_class" }%>
+    <% end %>
+</div>
+<div id="ajax1">
+  <button type="button" class="btn btn-dark btn-sm dropdown show" data-toggle="modal" data-target="#<%=post.id %>">
+    <%= post.likes.count %> Like | <%= post.comments.count %> comments
+  </button>
+
+  <div class="modal fade" id="<%=post.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="close">
+            <h5 class="modal-title" id="exampleModalLabel">Likes<br>
+            <% post.likes.each do |like| %>
+              <a><%= like.user.username %></a><br>
+            <%end%></h5>
+          </div>
+          <div class="close" style="padding-left:20px;border-left:1px solid black">
+            <h5 class="modal-title" id="exampleModalLabel">Comments<br>
+            <% post.comments.each do |comment| %><a><%= comment.user.username %> --> <%= comment.body %></a><br><%end%></h5>
+          </div>
+        </div>
+        <%= form_with model: [post, post.comments.build], remote: true do |form| %>
+          <div class="modal-body">
+            <div class="form-group">
+              <label for="message-text" class="col-form-label column">Add Comment:</label><br>
+              <%= form.text_area :body ,class:"coment"%>
+            </div>
+          </div>
+          <div class="modal-footer sub">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <%= form.submit%>                
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+<script>
+
+
+ function reloadLikeCount() {
+    console.log("button", location);
+    // event.preventDefault();
+    // var button = event.target;
+    // debugger
+    location.reload();
+  }
+
+    // $(document).ready(function() {
+    // $("#reload-button").on("click", function() {
+    //     debugger
+    //     // window.location.reload();
+    //     // location.href = location.href
+    //     console.log("location", location);
+    //     location.assign(location.href);
+    //     // alert('Reloading Page');
+    // });
+    // }); 
+</script>
+
+  

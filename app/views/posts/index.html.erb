@@ -1,0 +1,428 @@
+<style>
+  .sidebar{
+      width: 250px;
+      height: 100%;
+      position: fixed;
+      z-index:2;
+      top: 0;
+      bottom:20px;
+      left: 0;
+      overflow-y: auto;
+      background-color: #f1f1f1;
+  }
+  .menu-item-count{
+      background-color: white;
+      color: black;
+      font-size: 17px;
+      padding: 2px 18px;
+      border-radius: 10px;
+      margin-left: 5px;
+  }
+  h5{
+      font-family: 'Dancing Script', cursive;
+      font-size: 17px;
+      padding-left:4px;
+  }
+  .vas{
+      width: 797px;
+      height:511px;
+      border:2px solid black;
+      padding-bottom:40px;
+      padding-top:49px;
+      margin-top:10px;
+      box-shadow: 2px 2px 5px black;
+  }
+  h6{
+      position: absolute;
+      bottom: 27px;
+      left: 39px;
+      font-family: 'Dancing Script', cursive;
+  }
+  .profiles{
+      width: 172px;
+      height: 164px;
+      border-radius: 50%;
+      border: 2px solid black;
+      margin-left: 24px;
+      margin-top: 17px;
+      box-shadow: 2px 2px 2px black;
+  }
+  h4{
+      position: absolute;
+      top: 17px;
+      left: 39px;
+      font-family: 'Dancing Script', cursive;
+      text-shadow: 1px 1px 1px red;
+  }
+  .ss{
+      position:relative;
+  }
+  .like-section{
+      position: absolute;
+      bottom: 18px;
+      padding-bottom:10px;
+      right: 182px;
+  }
+  .like-button{
+      background-color: #3897f0;
+      height:32px;
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      cursor: pointer;
+  }
+  .like-button:hover{
+      background-color: #3173c0;
+  }
+  .unlike-button{
+      background-color: #ed4956;
+      height:32px;
+      border: none;
+      border-radius: 3px;
+      color: #fff;
+      cursor: pointer;
+  }
+  .unlike-button:hover {
+      background-color: #c81826;
+  }
+  .dropdown{
+      font-weight: bold;
+      position: absolute;
+      bottom: 28px;
+      right: 29px;
+  }
+  .logo{
+      width: 250px;
+      height: 76px;
+  } 
+  .showw{
+      overflow: scroll;
+      height: 150px;
+  }
+  .profile-picture{
+      border-radius: 50%;
+      border: 2px solid black;
+      width: 47px;
+      height: 46px;
+      position: relative;
+      right: 35px;
+      bottom: 4px;
+  }
+  .profiless{
+      border-radius: 50%;
+      border: 2px solid black;
+      width: 47px;
+      height: 46px;
+      position: relative;
+      right: 35px;
+      bottom: 4px;
+  }
+  .user-name{
+      padding-left:20px;
+  }
+  .nav-create{
+      text-align:center;
+      color:black;
+      padding:2px;
+      margin-left:40px;
+      font-family: 'Dancing Script', cursive;
+      border:2px solid black;
+      box-shadow:1px 1px 1px black;
+  }
+  .nav-create:hover{
+      background-color:#d1d1d1;
+  }
+  .name{
+      padding-left:70px;
+      color:black!important;
+  }
+  .roww{
+      border:1px solid black;
+  }
+  .close{
+      margin:0px!important;
+      cursor: auto!important;
+  }
+  .column{
+      margin-left:129px!important;
+  }
+  .modal-header{
+      justify-content:center!important;
+  }
+  .modal-content{
+      width:77%!important;
+  }
+  .coment{
+      margin-left:89px!important;
+  }
+  .sub{
+      justify-content:center!important;
+  }
+  .border{
+      border-right:1px solid black;
+      height:100px;
+  }
+</style>
+
+
+<div class="container">
+  <div class="row" id="post-ajax" >
+    <div class="col-3">
+      <div class="sidebar">
+        <%=image_tag("/assets/Instaa.jpg" ,class:"logo")  %>
+        <% if user_signed_in?%>
+          <%if current_user.image.attached?%>
+            <%= image_tag(url_for(current_user.image), class: "profiles")%><hr>
+          <%else%>
+            <%= image_tag("/assets/blank.png",class:"profiles") %><hr>
+          <%end%>
+          <h5><%=link_to current_user.username,user_path(current_user),class:"name"%></h5><br>
+          <div class="row roww">
+            <div class="col-3">
+              <h5>Posts<br><span class="menu-item-count"><%= current_user.posts.count %></span> </h5>
+            </div>
+            <div class="col-4">
+              <h5>Followers<br><span class="menu-item-count"><%=current_user.followers.count%></span></h5>
+            </div>
+            <div class="col-4">
+              <h5>Followings<br><span class="menu-item-count"><%=current_user.followings.count%></span></h5>
+            </div>
+          </div>  
+          <br><h5><%= link_to "Create Post", new_post_path, class: "nav-create" %></h5><hr>
+        <% else %>
+          <p>No user is currently signed in.</p>
+        <% end %>
+      </div>
+    </div>
+    <div class="col-9">
+      <% @posts.each do |f|%>
+        <div class="ss">
+          <% if f.image.persisted?  %>
+            <div><%= image_tag(url_for(f.image), class: "vas") %></div>
+              <h6><%= f.bio %></h6><br>
+              <% if f.user.image.persisted? %>
+                <h4><%= link_to image_tag(url_for(f.user.image), class: "profile-picture"), post_profile_path(f.id) %></h4>
+              <%else%>
+                <h4><%= image_tag("/assets/blank.png",class:"profiless") %></h4>
+              <% end %>
+              <h4><%=link_to f.user_name,post_profile_path(f.id),class:"user-name"%></h4>
+
+              <div class="like-section">
+                <% pre_like = f.likes.find { |like| like.user_id == current_user.id} %>
+                  <% if pre_like %>
+                    <%= button_to '', post_like_path(f.id, pre_like.id), method: :delete, class: "unlike-button fa fa-thumbs-down", remote: true,data: { 'post-id' => f.id, 'url' => "/posts/" + f.id.to_s + "/likes/" + pre_like.id.to_s }%> 
+                  <% else %>
+                    <%= button_to '', post_likes_path(f.id), class: "like-button fa fa-thumbs-up", remote: true,method: :post,data: { 'post-id' => f.id, 'url' => "/posts/" + f.id.to_s + "/likes" }%>
+                  <% end %>
+              </div>
+              <div class="like-count">
+                <button type="button" class="btn btn-dark btn-sm dropdown show" data-toggle="modal" data-target="#<%=f.id %>">
+                  <%= f.likes.count %> Like | <%= f.comments.count %> comments
+                </button>
+
+                <div class="modal fade" id="<%=f.id %>" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <div class="close">
+                          <h5 class="modal-title" id="exampleModalLabel">Likes<br>
+                          <% f.likes.each do |like| %>
+                            <a><%= like.user.username %></a><br>
+                          <%end%></h5>
+                        </div>
+                        <div class="border"></div>
+                        <div class="close" style="padding-left:20px">
+                          <h5 class="modal-title" id="exampleModalLabel">Comments<br>
+                          <% f.comments.each do |comment| %><a><%= comment.user.username %> --> <%= comment.body %></a><br><%end%></h5>
+                        </div>
+                      </div>
+                      <%= form_with model: [f, f.comments.build], remote: true do |form| %>
+                        <div class="modal-body">
+                          <div class="form-group">
+                            <label for="message-text" class="col-form-label column">Add Comment:</label><br>
+                            <%= form.text_area :body ,class:"coment"%>
+                          </div>
+                        </div>
+                        <div class="modal-footer sub">
+                          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                          <%= form.submit%>                
+                        </div>
+                      <% end %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <%#=render "post", post:f %>
+            </div>
+          <%end%>
+        <%end%>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script>
+
+$(document).ready(function() { 
+  $('.like-button, .unlike-button').on('click', function() {
+    // debugger
+  var postId = $(this).data('post-id');
+  var isUnlikeButton = $(this).hasClass('unlike-button');
+
+  var requestType = isUnlikeButton ? 'DELETE' : 'POST';
+  debugger
+  var url = $(this).data('url');
+  // var url = '/posts/' + postId + '/likes';
+  
+  $.ajax({
+    type: requestType,
+    url: url,
+    // dataType: 'json',
+    success: function(response) {
+      var likeCount = response.likes_count;
+      $('.like-count').text(likeCount);
+
+      if (isUnlikeButton) {
+        $('.like-button').removeClass('liked');
+      } else {
+        $('.like-button').addClass('liked');
+      }
+    },
+    error: function(error) {
+      console.log(error.responseText);
+    }
+  });
+ });
+});
+
+// $('.like-button').on('click', function() {
+//   var postId = $(this).data('post-id');
+
+//   $.ajax({
+//     type: 'POST',
+//     url: '/posts/' + postId + '/like',
+//     success: function(response) {
+//       // Update the UI on successful response
+//       var likeCount = response.likes_count;
+
+//       // Update the like count display
+//       $('.like-count').text(likeCount);
+
+//       // Change the button appearance to red
+//       $('.like-button').addClass('liked');
+//     },
+//     error: function(error) {
+//       // Handle the error response
+//     }
+//   });
+// });
+
+</script>
+
+ <%# $(document).ready(function() {
+   // debugger
+   $(document).on('ajax:complete', '#post-ajax', function(event, data, status, xhr) {
+   // $('#post-ajax').on('click', function() {
+     debugger
+     if(data.status == 200) {
+     model_form = $('#ajax1');
+     model_form.html(data.responseJSON.html);
+     } else {
+       model_form.modal('hide');
+       toastr.error('something went wrong!');
+     }
+   });
+ });
+
+     var projectIds = $(this).val();
+     $('#ajax1').empty();
+     $.ajax({
+       url: '/posts/' + postIds + '/post', 
+       method: 'GET',
+       dataType: 'html',
+       data: { postid: postIds },
+       success: function(response) {
+         $("#ajax1").html(response);
+       }
+     });
+   });
+ }); %>
+
+<%# <script>
+$(document).ready(function() {
+  $('.like-button').on('click', function(event) {
+    debugger
+    // event.preventDefault();
+    var button = $(this);
+    var url = button.attr('href');
+    var postId = button.data('post-id');
+    var dropdownId = '#post-' + postId + '-dropdown';
+
+    $.ajax({
+      type: 'POST',
+      url: url,
+      dataType: 'json',
+      success: function(response) {
+        button.removeClass('like-button').addClass('unlike-button');
+        button.attr('href', response.destroy_path);
+        button.attr('data-confirm', 'Are you sure?');
+        $(dropdownId).load(location.href + ' ' + dropdownId + ' > *');
+      },
+      error: function(xhr) {
+        console.log(xhr.responseText);
+      }
+    });
+
+  });
+
+  $('.unlike-button').on('click', function(event) {
+    // event.preventDefault();
+    var button = $(this);
+    var url = button.attr('href');
+    var postId = button.data('post-id');
+    var dropdownId = '#post-' + postId + '-dropdown';
+
+    $.ajax({
+      type: 'DELETE',
+      url: url,
+      dataType: 'json',
+      success: function(response) {
+        button.removeClass('unlike-button').addClass('like-button');
+        button.attr('href', response.create_path);
+        button.removeAttr('data-confirm');
+        $(dropdownId).load(location.href + ' ' + dropdownId + ' > *');
+      },
+      error: function(xhr) {
+        console.log(xhr.responseText);
+      }
+    });
+  });
+});
+</script> %>
+
+<%# <script>
+  function loadDoc(){
+    const xhttp= new XMLHttpRequest();
+    xhttp.onload=function(){
+      document.getElementById("demo").innerHTML=this.responseText;
+    }
+    xhttp.open("POST","_post.html.erb");
+    xhttp.send();
+  }
+</script> %>
+
+
+<%# <script>
+$(document).ready(function() {
+   $("#reload-button").on("click", function() {
+       // window.location.reload();
+       // location.href = location.href
+       console.log("location");
+       location.reload();
+       // alert('Reloading Page');
+   });
+ }); 
+</script> %>

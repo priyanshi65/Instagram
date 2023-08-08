@@ -1,0 +1,35 @@
+  $(
+'#like-button-<%= @like.post_id %>'
+).
+removeClass
+(
+'unlike-button'
+).
+addClass
+(
+'like-button'
+);
+  $(
+'#like-button-<%= @like.post_id %>'
+).
+text
+(
+'Like'
+);
+  
+var
+ likeCount = 
+parseInt
+($(
+'#like-count-<%= @like.post_id %>'
+).
+text
+());
+  $(
+'#like-count-<%= @like.post_id %>'
+).
+text
+(likeCount - 
+1
+);
+<% end %>
